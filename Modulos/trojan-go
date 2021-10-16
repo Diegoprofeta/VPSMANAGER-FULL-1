@@ -1,5 +1,40 @@
 #!/bin/bash
 
+#MIT License
+#Copyright (c) 2020 h31105
+
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
+
+#====================================================
+# System Request:Debian 9+/Ubuntu 18.04+/Centos 7+
+# Author: Miroku/h31105
+# Dscription: TLS-Shunt-Proxy&Trojan-Go&V2Ray Script
+# Official document:
+# https://www.v2ray.com/
+# https://github.com/p4gefau1t/trojan-go
+# https://github.com/liberal-boy/tls-shunt-proxy
+# https://www.docker.com/
+# https://github.com/containrrr/watchtower
+# https://github.com/portainer/portainer
+# https://github.com/wulabing/V2Ray_ws-tls_bash_onekey
+#====================================================
+
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
@@ -279,7 +314,7 @@ trojan_reset() {
     "local_addr": "127.0.0.1",
     "local_port": ${tjport},
     "remote_addr": "1.1.1.1",
-    "remote_port": 8000,
+    "remote_port": 80,
     "fallback_addr": "1.1.1.1",
     "fallback_port": 443,
     "password": ["${tjpasswd}"],
@@ -567,7 +602,7 @@ install_tsp() {
     cat >$tsp_conf <<-EOF
 #TSP_CFG_Ver:${tsp_cfg_version}
 listen: 0.0.0.0:${tspport} #TSP_Port
-redirecthttps: 0.0.0.0:8000
+redirecthttps: 0.0.0.0:80
 inboundbuffersize: 4
 outboundbuffersize: 32
 vhosts:
@@ -692,7 +727,7 @@ install_tls_shunt_proxy() {
     basic_optimization
     domain_port_check
     port_exist_check "${tspport}"
-    port_exist_check 8000
+    port_exist_check 80
     config_exist_check "${tsp_conf}"
     web_camouflage
     install_tsp

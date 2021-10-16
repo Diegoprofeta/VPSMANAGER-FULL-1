@@ -1,21 +1,92 @@
-#!/usr/bin/env python3
-# encoding: utf-8
-# SSHPLUS By @Crazy_vpn
-import socket, threading, thread, select, signal, sys, time
-from os import system
-system("clear")
-#conexao
-IP = '0.0.0.0'
-try:
-   PORT = int(sys.argv[1])
-except:
-   PORT = 8080
+#!/bin/bash
+
+fun_bar () {
+          comando[0]="$1"
+          comando[1]="$2"
+          (
+          [[ -e $HOME/fim ]] && rm $HOME/fim
+          ${comando[0]} > /dev/null 2>&1
+          ${comando[1]} > /dev/null 2>&1
+          touch $HOME/fim
+          ) > /dev/null 2>&1 &
+          tput civis
+		  echo -e "\033[1;31m---------------------------------------------------\033[1;37m"
+          echo -ne "${col7}    ESPERE..\033[1;35m["
+          while true; do
+          for((i=0; i<18; i++)); do
+          echo -ne "\033[1;34m#"
+          sleep 0.2s
+          done
+         [[ -e $HOME/fim ]] && rm $HOME/fim && break
+         echo -e "${col5}"
+         sleep 1s
+         tput cuu1
+         tput dl1
+         echo -ne "\033[1;37m    ESPERE..\033[1;35m["
+         done
+         echo -e "\033[1;35m]\033[1;37m -\033[1;32m INSTALADO !\033[1;37m"
+         tput cnorm
+		 echo -e "\033[1;31m---------------------------------------------------\033[1;37m"
+        }
+        
+
+clear&&clear
+echo -e "\033[1;31mâ€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”\033[1;37m"
+echo -e "\033[1;32m              PAYLOAD + SSL |by: LAG13 "
+echo -e "\033[1;31mâ€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”\033[1;37m"
+echo -e "\033[1;36m              SCRIPT AUTOCONFIGURACION "
+echo -e "\033[1;31mâ€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”\033[1;37m"
+echo -e "\033[1;37mRequiere tener el puerto libre ,80 y el 443"
+echo
+echo -e "\033[1;33m                 INSTALANDO SSL... "
+inst_ssl () {
+
+apt-get install stunnel4 -y
+echo -e "client = no\n[SSL]\ncert = /etc/stunnel/stunnel.pem\naccept = 443 \nconnect = 127.0.0.1:80" > /etc/stunnel/stunnel.conf
+openssl genrsa -out stunnel.key 2048 > /dev/null 2>&1
+(echo "" ; echo "" ; echo "" ; echo "" ; echo "" ; echo "" ; echo "@cloudflare" )|openssl req -new -key stunnel.key -x509 -days 1000 -out stunnel.crt 
+cat stunnel.crt stunnel.key > stunnel.pem 
+mv stunnel.pem /etc/stunnel/
+sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/stunnel4
+service stunnel4 restart 
+rm -rf /etc/ger-frm/stunnel.crt 
+rm -rf /etc/ger-frm/stunnel.key
+rm -rf /root/stunnel.crt
+rm -rf /root/stunnel.key
+
+}
+fun_bar 'inst_ssl'
+echo -e "\033[1;33m                 CONFIGURANDO SSL.. "
+fun_bar 'inst_ssl'
+echo -e "\033[1;37m Mensaje en el mini Banner por defecto (SSL + Pay) \033[1;36m"
+echo -e "\033[1;37m No exagerar en el mini Banner  \033[1;36m"
+echo -e "\e[0;31m Soporta HTML\e[0m"
+read -p " :" msgbanner
+[[ "$msgbanner" = "" ]]&& msgbanner="SSL + Pay"
+echo 
+echo -e "\033[1;33m                 CONFIGURANDO PYTHON.. "
+inst_py () {
+
+pkill -f 80
+pkill python
+apt install python -y
+apt install screen -y
+
+pt=$(netstat -nplt |grep 'sshd' | awk -F ":" NR==1{'print $2'} | cut -d " " -f 1)
+
+ cat <<EOF > proxy.py
+import socket, threading, thread, select, signal, sys, time, getopt
+
+# CONFIG
+LISTENING_ADDR = '0.0.0.0'
+LISTENING_PORT = 1080
 PASS = ''
-BUFLEN = 8196 * 8
+
+# CONST
+BUFLEN = 4096 * 4
 TIMEOUT = 60
-MSG = 'SSHPLUS'
-DEFAULT_HOST = '0.0.0.0:1194'
-RESPONSE = "HTTP/1.1 200 " + str(MSG) + "\r\n\r\n"
+DEFAULT_HOST = "127.0.0.1:$pt"
+RESPONSE = 'HTTP/1.1 101 <font color="green">CONECTA4G</font>'
 
 class Server(threading.Thread):
     def __init__(self, host, port):
@@ -90,7 +161,7 @@ class ConnectionHandler(threading.Thread):
         self.client = socClient
         self.client_buffer = ''
         self.server = server
-        self.log = 'Conexao: ' + str(addr)
+        self.log = 'Connection: ' + str(addr)
 
     def close(self):
         try:
@@ -132,10 +203,10 @@ class ConnectionHandler(threading.Thread):
                     self.method_CONNECT(hostPort)
                 elif len(PASS) != 0 and passwd != PASS:
                     self.client.send('HTTP/1.1 400 WrongPass!\r\n\r\n')
-                if hostPort.startswith(IP):
+                elif hostPort.startswith('127.0.0.1') or hostPort.startswith('localhost'):
                     self.method_CONNECT(hostPort)
                 else:
-                   self.client.send('HTTP/1.1 403 Forbidden!\r\n\r\n')
+                    self.client.send('HTTP/1.1 403 Forbidden!\r\n\r\n')
             else:
                 print '- No X-Real-Host!'
                 self.client.send('HTTP/1.1 400 NoXRealHost!\r\n\r\n')
@@ -172,7 +243,7 @@ class ConnectionHandler(threading.Thread):
             if self.method=='CONNECT':
                 port = 443
             else:
-                port = 22
+                port = 80
 
         (soc_family, soc_type, proto, _, address) = socket.getaddrinfo(host, port)[0]
 
@@ -181,13 +252,15 @@ class ConnectionHandler(threading.Thread):
         self.target.connect(address)
 
     def method_CONNECT(self, path):
-    	self.log += ' - CONNECT ' + path
+        self.log += ' - CONNECT ' + path
+        
         self.connect_target(path)
         self.client.sendall(RESPONSE)
         self.client_buffer = ''
+
         self.server.printLog(self.log)
         self.doCONNECT()
-                    
+
     def doCONNECT(self):
         socs = [self.client, self.target]
         count = 0
@@ -222,20 +295,66 @@ class ConnectionHandler(threading.Thread):
                 break
 
 
+def print_usage():
+    print 'Usage: proxy.py -p <port>'
+    print '       proxy.py -b <bindAddr> -p <port>'
+    print '       proxy.py -b 0.0.0.0 -p 1080'
 
-def main(host=IP, port=PORT):
-    print "\033[0;34m━"*8,"\033[1;32m PROXY SOCKS","\033[0;34m━"*8,"\n"
-    print "\033[1;33mIP:\033[1;32m " + IP
-    print "\033[1;33mPORTA:\033[1;32m " + str(PORT) + "\n"
-    print "\033[0;34m━"*10,"\033[1;32m SSHPLUS","\033[0;34m━\033[1;37m"*11,"\n"
-    server = Server(IP, PORT)
+def parse_args(argv):
+    global LISTENING_ADDR
+    global LISTENING_PORT
+    
+    try:
+        opts, args = getopt.getopt(argv,"hb:p:",["bind=","port="])
+    except getopt.GetoptError:
+        print_usage()
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print_usage()
+            sys.exit()
+        elif opt in ("-b", "--bind"):
+            LISTENING_ADDR = arg
+        elif opt in ("-p", "--port"):
+            LISTENING_PORT = int(arg)
+    
+
+def main(host=LISTENING_ADDR, port=LISTENING_PORT):
+    
+    print "\n ==============================\n"
+    print "\n         PYTHON PROXY          \n"
+    print "\n ==============================\n"
+    print "corriendo ip: " + LISTENING_ADDR
+    print "corriendo port: " + str(LISTENING_PORT) + "\n"
+    print "Se ha Iniciado Por Favor Cierre el Terminal\n"
+    
+    server = Server(LISTENING_ADDR, LISTENING_PORT)
     server.start()
+
     while True:
         try:
             time.sleep(2)
         except KeyboardInterrupt:
-            print '\nParando...'
+            print 'Stopping...'
             server.close()
             break
+    
 if __name__ == '__main__':
+    parse_args(sys.argv[1:])
     main()
+EOF
+
+screen -dmS pythonwe python proxy.py -p 80&
+
+}
+fun_bar 'inst_py'
+rm -rf proxy.py
+echo -e "                 INSTALACIÃ“N TERMINADA"
+echo
+echo -e "Solucionado el error de conectividad mediante el puerto 443 con SNI"
+echo
+echo -e "\e[0;31m                       by:LAG13\e[0m"
+
+echo 
+
+

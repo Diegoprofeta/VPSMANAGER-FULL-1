@@ -11,7 +11,7 @@ Lembre-se que V2RAY E TROJAN-GO poderão apresentar problemas de compatibilidade
 WEBSOCKET: 80 ou 8080
 SSL: 443
 
-# Cr
-Apesar de ser open-source, sempre deixo os créditos para quem merece. Git:
-crazy_vpn
-rodrigo12xd
+# Créditos
+Apesar de ser opensource, sempre deixo os créditos pra quem merece. Git:
+crazy_vpn (desenvolvedor)
+rodrigo12xd (editor)

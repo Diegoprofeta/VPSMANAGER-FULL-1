@@ -422,7 +422,7 @@ if [[ -e /usr/local/bin/badvpn-udpgw ]]; then
  printf "%s\n" "BadVPN-udpgw is already installed"
  exit 1
 fi
-    curl -skL "https://www.dropbox.com/s/ubsgol6b8t2s2hm/badvpn-udpgw" -o /usr/local/bin/badvpn-udpgw 
+    curl -skL "https://raw.githubusercontent.com/nexyssh/badvpn-udpgw/main/badvpn-udpgw" -o /usr/local/bin/badvpn-udpgw 
 	chmod +x /usr/local/bin/badvpn-udpgw
 	curl -skL "https://gist.githubusercontent.com/excelsiorcode/3b259ca177ef4ba78145ee8d360b8fc5/raw/badvpn-udpgw.service" -o /lib/systemd/system/badvpn-udpgw.service
 	systemctl daemon-reload

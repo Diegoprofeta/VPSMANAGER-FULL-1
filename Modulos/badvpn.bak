@@ -32,7 +32,7 @@ fun_udp1 () {
     clear
     echo -e "\033[1;32mINICIANDO O BADVPN... \033[0m\n"
     fun_udpon () {
-        screen -dmS udpvpn /bin/badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 1000 --max-connections-for-client 2 --client-socket-sndbuf 10000
+        screen -dmS udpvpn antCrashVPN.sh
         [[ $(grep -wc "udpvpn" /etc/autostart) = '0' ]] && {
 		    echo -e "ps x | grep 'udpvpn' | grep -v 'grep' || screen -dmS udpvpn antCrashVPN.sh" >> /etc/autostart
 		} || {
@@ -60,7 +60,7 @@ fun_udp1 () {
 	   fun_bar 'inst_udp'
 	   echo -e "\n\033[1;32mINICIANDO O BADVPN... \033[0m\n"
        fun_udpon2 () {
-           screen -dmS udpvpn /bin/badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 10000 --max-connections-for-client 8
+           screen -dmS udpvpn antCrashVPN.sh
            [[ $(grep -wc "udpvpn" /etc/autostart) = '0' ]] && {
 		       echo -e "ps x | grep 'udpvpn' | grep -v 'grep' || screen -dmS udpvpn antCrashVPN.sh" >> /etc/autostart
 		   } || {

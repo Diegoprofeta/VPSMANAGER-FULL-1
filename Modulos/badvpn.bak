@@ -58,10 +58,7 @@ fun_badvpn() {
                 } || {
                     cd $HOME
                     wget https://www.dropbox.com/s/48b36clnxkkurlz/badvpn-udpgw -o /dev/null
-					wget https://raw.githubusercontent.com/nexyssh/BADVPNX/main/antCrashVPN.sh -o /dev/null					
                     mv -f $HOME/badvpn-udpgw /bin/badvpn-udpgw
-					mv -f $HOME/antCrashVPN.sh /bin/antCrashVPN.sh
-					chmod 777 /bin/antCrashVPN.sh
                     chmod 777 /bin/badvpn-udpgw
                 }
             }

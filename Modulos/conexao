@@ -2134,7 +2134,7 @@ exit 0' >$RCLOCAL
 				v2raymanager
 				exit;
 				;;
-            10 | 11)
+            10 | 10)
 				trojan-go
 				;;                    
 			11 | 11)

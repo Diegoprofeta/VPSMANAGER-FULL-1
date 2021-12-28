@@ -45,7 +45,6 @@ fun_udp1 () {
     echo -e "\n  \033[1;32mBADVPN FULL ATIVO !\033[0m"
 	echo -e ""
 	echo -e "\n\033[1;32mESSE BADVPN SUPORTA ATÉ 1024 USUÁRIOS CONECTADOS POR PADRÃO !\033[0m"
-	echo -e "\n\033[1;36mBY @SISUDRAGON\033[0m"	
     sleep 4
     menu
     } || {
